@@ -218,7 +218,7 @@ VAR
 	Tag2Name : STRING := 'MyTag2';
 	Tag3Name : STRING := 'MyTag3';
 	Tag4Name : STRING := 'MyTag4';
-	ExpectedBuffer : STRING := '<MyTag1><MyTag2/><MyTag3/></MyTag1><MyTag4/>';
+	ExpectedBuffer : STRING := '<MyTag1><MyTag2/><MyTag3/><MyTag4/></MyTag1>';
 	ActualBuffer : STRING;
 END_VAR
 ]]></Declaration>
@@ -230,15 +230,15 @@ Setup();
 XmlControl.Setbuffer(ADR(Buffer), SIZEOF(Buffer));
 
 (*
-<MyTag1><MyTag2/><MyTag3/></MyTag1><MyTag4/>
+<MyTag1><MyTag2/><MyTag3/><MyTag4/></MyTag1>
 *)
 XmlControl.NewTag(Tag1Name);
 XmlControl.NewTag(Tag2Name);
 XmlControl.CloseTag();
 XmlControl.NewTag(Tag3Name);
 XmlControl.CloseTag();
-XmlControl.CloseTag();
 XmlControl.NewTag(Tag4Name);
+XmlControl.CloseTag();
 XmlControl.CloseTag();
 
 MEMCPY(ADR(ActualBuffer), ADR(Buffer), SIZEOF(ActualBuffer));
@@ -316,15 +316,16 @@ Setup();
 XmlControl.Setbuffer(ADR(Buffer), SIZEOF(Buffer));
 
 (*
-<MyTag1><MyTag2/><MyTag3/></MyTag1><MyTag4/>
+<MyTag1><MyTag2/><MyTag3>Data</MyTag3><MyTag4/></MyTag1>
 *)
 XmlControl.NewTag(Tag1Name);
 XmlControl.NewTag(Tag2Name);
 XmlControl.CloseTag();
 XmlControl.NewTag(Tag3Name);
-XmlControl.CloseTag();
+XmlControl.NewTagData('Data');
 XmlControl.CloseTag();
 XmlControl.NewTag(Tag4Name);
+XmlControl.CloseTag();
 XmlControl.CloseTag();
 
 ActualTag := XmlControl.NextTag();
@@ -340,14 +341,13 @@ AssertEquals_String(Expected := Tag3Name,
                    Actual :=  ActualTag,
                    Message := 'NextTag does not contain expected content');
 ActualTag := XmlControl.NextTag();
-AssertEquals_String(Expected := Tag1Name, 
-                   Actual :=  ActualTag,
-                   Message := 'NextTag does not contain expected content');
-ActualTag := XmlControl.NextTag();
 AssertEquals_String(Expected := Tag4Name, 
                    Actual :=  ActualTag,
                    Message := 'NextTag does not contain expected content');
-							   							   
+ActualTag := XmlControl.NextTag();
+AssertEquals_String(Expected := Tag1Name, 
+                   Actual :=  ActualTag,
+                   Message := 'NextTag does not contain expected content');				   							   
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
