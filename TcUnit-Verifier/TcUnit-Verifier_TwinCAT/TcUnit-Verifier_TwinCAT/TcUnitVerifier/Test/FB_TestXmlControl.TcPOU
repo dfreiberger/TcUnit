@@ -343,6 +343,7 @@ ActualTag := XmlControl.NextTag();
 AssertEquals_String(Expected := Tag1Name, 
                    Actual :=  ActualTag,
                    Message := 'NextTag does not contain expected content');
+ActualTag := XmlControl.NextTag();
 AssertEquals_String(Expected := Tag4Name, 
                    Actual :=  ActualTag,
                    Message := 'NextTag does not contain expected content');
