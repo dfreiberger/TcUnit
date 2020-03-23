@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="PRG_TEST" Id="{48f3a80c-6b31-445f-a938-08b4b352141e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_TEST
 VAR
@@ -26,6 +26,7 @@ VAR
     TestFinishedNamed : FB_TestFinishedNamed;
     TestNumberOfAssertionsCalculation : FB_TestNumberOfAssertionsCalculation;
     TestFileControl : FB_TestFileControl;
+    TestXmlControl : FB_TestXmlControl;
     TestStreamBuffer : FB_TestStreamBuffer;
 
     (* The testsuite below is not active, as it will make TcUnit to abort. Uncomment if you want
