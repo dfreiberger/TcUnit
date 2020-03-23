@@ -82,7 +82,7 @@ END_VAR
 *)
 METHOD PUBLIC LogTestSuiteResults
 VAR
-    CfUnitTestResults : REFERENCE TO ST_TestSuiteResults;
+    UnitTestResults : REFERENCE TO ST_TestSuiteResults;
     CurSuiteNr: UINT;
     CurTestCnt : UINT;
 END_VAR
@@ -92,7 +92,7 @@ VAR CONSTANT
     TEST_STATUS_FAIL : STRING := 'FAIL';
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CfUnitTestResults REF=TestResults.GetTestSuiteResults();
+        <ST><![CDATA[UnitTestResults REF=TestResults.GetTestSuiteResults();
 
 // Only publish once if "EnablePublish" is enabled and all test results are stored.
 PublishTrigger(CLK := (TestResults.GetAreTestResultsAvailable() AND GVL_Param_TcUnit.EnablePublish) );
@@ -104,39 +104,39 @@ IF PublishTrigger.Q THEN
     (* <testsuites> *)
     xml.NewTag('testsuites');
     Xml.NewParameter('disabled', '');
-    Xml.NewParameter('failures', UINT_TO_STRING(CfUnitTestResults.NumberOfFailedTestCases));
-    Xml.NewParameter('tests', UINT_TO_STRING(CfUnitTestResults.NumberOfSuccessfulTestCases));
+    Xml.NewParameter('failures', UINT_TO_STRING(UnitTestResults.NumberOfFailedTestCases));
+    Xml.NewParameter('tests', UINT_TO_STRING(UnitTestResults.NumberOfSuccessfulTestCases));
 
-    FOR CurSuiteNr := 1 TO CfUnitTestResults.NumberOfTestSuites BY 1 DO 
+    FOR CurSuiteNr := 1 TO UnitTestResults.NumberOfTestSuites BY 1 DO 
         (* <testsuite> *)
         xml.NewTag('testsuite');
-        Xml.NewParameter('id', UINT_TO_STRING(CfUnitTestResults.TestSuiteResults[CurSuiteNr].Identity));
-        Xml.NewParameter('name', CfUnitTestResults.TestSuiteResults[CurSuiteNr].name);
-        Xml.NewParameter('tests', UINT_TO_STRING(CfUnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfTests));        
-        Xml.NewParameter('failures', UINT_TO_STRING(CfUnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfFailedTests));
+        Xml.NewParameter('id', UINT_TO_STRING(UnitTestResults.TestSuiteResults[CurSuiteNr].Identity));
+        Xml.NewParameter('name', UnitTestResults.TestSuiteResults[CurSuiteNr].name);
+        Xml.NewParameter('tests', UINT_TO_STRING(UnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfTests));        
+        Xml.NewParameter('failures', UINT_TO_STRING(UnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfFailedTests));
            
-        FOR CurTestCnt := 1 TO CfUnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfTests BY 1 DO
+        FOR CurTestCnt := 1 TO UnitTestResults.TestSuiteResults[CurSuiteNr].NumberOfTests BY 1 DO
             (* <testcase> *)
             Xml.NewTag('testcase');
-            Xml.NewParameter('name', CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestName);
-            Xml.NewParameter('classname', CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestClassName);
+            Xml.NewParameter('name', UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestName);
+            Xml.NewParameter('classname', UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestClassName);
             
-            IF CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestIsFailed THEN
+            IF UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestIsFailed THEN
                 Xml.NewParameter('status', TEST_STATUS_FAIL);
-            ELSIF CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestIsSkipped THEN   
+            ELSIF UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].TestIsSkipped THEN   
                 Xml.NewParameter('status', TEST_STATUS_SKIP);
             ELSE
                 Xml.NewParameter('status', TEST_STATUS_PASS);
 			END_IF
 
             (* determine testcase fail or succes *)
-            IF CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureType <> E_AssertionType.Type_UNDEFINED THEN 
+            IF UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureType <> E_AssertionType.Type_UNDEFINED THEN 
                 (* in case of fail 
                     <failure message="Values differ" type="BYTE" />
                 *)
                 Xml.NewTag('failure');
-                Xml.NewParameter('message', CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureMessage );
-                Xml.NewParameter('type', F_AssertionTypeToString(CfUnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureType) );       
+                Xml.NewParameter('message', UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureMessage );
+                Xml.NewParameter('type', F_AssertionTypeToString(UnitTestResults.TestSuiteResults[CurSuiteNr].TestCaseResults[CurTestCnt].FailureType) );       
                 (* close failure tag*)
                 Xml.CloseTag();
                 
