@@ -169,6 +169,7 @@ namespace TcUnit.Verifier
             new FB_AdjustAssertFailureMessageToMax253CharLengthTest(errors);
             new FB_CheckIfSpecificTestIsFinished(errors);
             new FB_WriteProtectedFunctions(errors);
+            new FB_TestFileControl(errors);
             new FB_TestStreamBuffer(errors);
             new FB_TestFinishedNamed(errors);
 
