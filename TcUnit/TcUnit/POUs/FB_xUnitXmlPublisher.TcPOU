@@ -15,7 +15,7 @@ VAR
     File : FB_FileControl;
     Xml : FB_XMLControl;
     BufferInitialised : BOOL := FALSE;
-    Buffer : ARRAY [0..(GVL_Param_TcUnit.BufferSize-1)] OF BYTE;
+    Buffer : ARRAY [0..(GVL_Param_TcUnit.XUnitBufferSize-1)] OF BYTE;
     WritingTestSuiteResultNumber : UINT(1..GVL_Param_TcUnit.MaxNumberOfTestSuites);
     PublishTrigger : R_TRIG;
 END_VAR]]></Declaration>
